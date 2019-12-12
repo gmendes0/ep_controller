@@ -1,8 +1,24 @@
-import React, { useState } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { AsyncStorage, StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
 
-export default function Card() {
-	const [ep, setEp] = useState(1)
+export default function Card(props) {
+	const [title, setTitle] = useState(props.title)
+	const [ep, setEp] = useState(0)
+
+	useEffect(() => {
+		async function getEps() {
+			const response = await AsyncStorage.getItem(title)
+			if (response) setEp(Number(response))
+		}
+		getEps()
+	}, [])
+
+	useEffect(() => {
+		async function storeEP() {
+			await AsyncStorage.setItem(title, String(ep))
+		}
+		storeEP()
+	}, [ep])
 
 	const incrementEP = (currentEP) => currentEP + 1
 	const decrementEP = (currentEP) => {
@@ -25,10 +41,12 @@ export default function Card() {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.cradTitle}>Naruto</Text>
+			<Text style={styles.cradTitle}>
+				{title}
+			</Text>
 			<View style={styles.inputArea}>
 				<TouchableOpacity
-					style={[styles.controllBtn, styles.addBtn]}
+					style={[styles.controllBtn, styles.removeBtn]}
 					onPress={() => setEp(decrementEP(ep))}
 				>
 					<Text style={styles.btnText}>-</Text>
@@ -39,7 +57,7 @@ export default function Card() {
 					onChangeText={handleChange}
 				>{ep}</TextInput>
 				<TouchableOpacity
-					style={[styles.controllBtn, styles.removeBtn]}
+					style={[styles.controllBtn, styles.addBtn]}
 					onPress={() => setEp(incrementEP(ep))}
 				>
 					<Text style={styles.btnText}>+</Text>

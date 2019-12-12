@@ -7,7 +7,9 @@ export default function Home() {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Minhas Séries</Text>
-			<Card />
+			<Card
+				title='Naruto Shippuden'
+			/>
 			<View style={styles.addBtnContainer}>
 				<TouchableOpacity style={styles.addBtn}>
 					<Text style={styles.addBtnText}>Adicionar série</Text>
