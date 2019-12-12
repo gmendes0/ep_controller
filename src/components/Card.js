@@ -1,19 +1,47 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
 
 export default function Card() {
+	const [ep, setEp] = useState(1)
+
+	const incrementEP = (currentEP) => currentEP + 1
+	const decrementEP = (currentEP) => {
+		if (currentEP > 0) {
+			return currentEP - 1
+		} else {
+			return 0
+		}
+	}
+	const isNumeric = (value) => typeof value === 'number'
+
+	function handleChange(value) {
+		const inputNumber = value.replace(/\D/g, '')
+		if (isNumeric(Number(inputNumber))) {
+			setEp(Number(inputNumber))
+		} else {
+			setEp(inputNumber)
+		}
+	}
+
 	return (
 		<View style={styles.container}>
 			<Text style={styles.cradTitle}>Naruto</Text>
 			<View style={styles.inputArea}>
-				<TouchableOpacity style={[styles.controllBtn, styles.addBtn]}>
+				<TouchableOpacity
+					style={[styles.controllBtn, styles.addBtn]}
+					onPress={() => setEp(decrementEP(ep))}
+				>
 					<Text style={styles.btnText}>-</Text>
 				</TouchableOpacity>
 				<TextInput
 					keyboardType='numeric'
 					style={styles.input}
-				>150</TextInput>
-				<TouchableOpacity style={[styles.controllBtn, styles.removeBtn]}>
+					onChangeText={handleChange}
+				>{ep}</TextInput>
+				<TouchableOpacity
+					style={[styles.controllBtn, styles.removeBtn]}
+					onPress={() => setEp(incrementEP(ep))}
+				>
 					<Text style={styles.btnText}>+</Text>
 				</TouchableOpacity>
 			</View>
