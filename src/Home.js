@@ -10,6 +10,9 @@ export default function Home() {
 			<Card
 				title='Naruto Shippuden'
 			/>
+			<Card
+				title='Boruto: Naruto Next Generations'
+			/>
 			<View style={styles.addBtnContainer}>
 				<TouchableOpacity style={styles.addBtn}>
 					<Text style={styles.addBtnText}>Adicionar série</Text>
