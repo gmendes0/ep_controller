@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { AsyncStorage, StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 
 export default function Card(props) {
 	const [title, setTitle] = useState(props.title)
+
 	const [ep, setEp] = useState(0)
 
 	useEffect(() => {
@@ -49,7 +51,7 @@ export default function Card(props) {
 					style={[styles.controllBtn, styles.removeBtn]}
 					onPress={() => setEp(decrementEP(ep))}
 				>
-					<Text style={styles.btnText}>-</Text>
+					<Ionicons name="md-remove" size={16} color="#FFF" />
 				</TouchableOpacity>
 				<TextInput
 					keyboardType='numeric'
@@ -60,7 +62,7 @@ export default function Card(props) {
 					style={[styles.controllBtn, styles.addBtn]}
 					onPress={() => setEp(incrementEP(ep))}
 				>
-					<Text style={styles.btnText}>+</Text>
+					<Ionicons name="md-add" size={16}  color="#FFF" />
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -100,9 +102,6 @@ const styles = StyleSheet.create({
 	},
 	removeBtn: {
 		backgroundColor: 'rgba(205, 50, 58, 1)',
-	},
-	btnText: {
-		color: '#FFF',
 	},
 	input: {
 		borderWidth: StyleSheet.hairlineWidth,
