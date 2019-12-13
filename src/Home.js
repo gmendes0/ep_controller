@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, AsyncStorage, StatusBar, FlatList, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, AsyncStorage, StatusBar, FlatList, View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ToastAndroid, Keyboard  } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
 import Card from './components/Card'
@@ -19,6 +19,7 @@ export default function Home() {
 	const [serie, setSerie] = useState('')
 
 	async function handleAdd() {
+		Keyboard.dismiss()
 		if (serie) {
 			const database = DB
 			
@@ -26,38 +27,42 @@ export default function Home() {
 				database.series.push(serie)
 				await AsyncStorage.setItem('series', JSON.stringify(database))
 				getSeries()
+				ToastAndroid.show('Adicionada com sucesso', ToastAndroid.SHORT)
 			}
 		}
 	}
 
 	return (
-		<KeyboardAvoidingView enabled behavior='padding' style={styles.container}>
-			<Text style={styles.title}>Minhas Séries</Text>
-			{DB.series.length === 0 && (
-				<Text>Adicione uma série abaixo</Text>
-			)}
-			{DB.series.length > 0 && (
-				<FlatList
-					data={DB.series}
-					renderItem={({ item }) => (
-						<Card title={item}/>
-					)}
-					keyExtractor={item => item}
-					showsVerticalScrollIndicator={false}
-				/>
-			)}
-			<View style={styles.addBtnContainer}>
-				<TextInput
-					placeholder="Adcionar uma série"
-					style={styles.input}
-					value={serie}
-					onChangeText={setSerie}
-				/>
-				<TouchableOpacity style={styles.addBtn} onPress={handleAdd}>
-					<Ionicons name="md-add" size={15} color="#FFF" />
-				</TouchableOpacity>
-			</View>
-		</KeyboardAvoidingView>
+		<>
+			<KeyboardAvoidingView enabled behavior='padding' style={styles.container}>
+				<Text style={styles.title}>Minhas Séries</Text>
+				{DB.series.length === 0 && (
+					<Text>Adicione uma série abaixo</Text>
+				)}
+				{DB.series.length > 0 && (
+					<FlatList
+						data={DB.series}
+						renderItem={({ item }) => (
+							<Card title={item} refresh={getSeries}/>
+						)}
+						keyExtractor={item => item}
+						showsVerticalScrollIndicator={false}
+					/>
+				)}
+				<View style={styles.addBtnContainer}>
+					<TextInput
+						placeholder="Adcionar uma série"
+						style={styles.input}
+						value={serie}
+						onChangeText={setSerie}
+						onSubmitEditing={Keyboard.dismiss}
+					/>
+					<TouchableOpacity style={styles.addBtn} onPress={handleAdd}>
+						<Ionicons name="md-add" size={15} color="#FFF" />
+					</TouchableOpacity>
+				</View>
+			</KeyboardAvoidingView>
+		</>
 	)
 }
 

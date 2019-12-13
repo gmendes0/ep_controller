@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { AsyncStorage, StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
+import { AsyncStorage, StyleSheet, View, Text, TouchableOpacity, TextInput, ToastAndroid } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
 export default function Card(props) {
@@ -41,6 +41,22 @@ export default function Card(props) {
 		}
 	}
 
+	async function removeSerie() {
+		if (AsyncStorage.getItem(props.title)) {
+
+			await AsyncStorage.removeItem(props.title)
+			if (await AsyncStorage.getItem('series')) {
+
+				const response = JSON.parse(await AsyncStorage.getItem('series'))
+				const arrayWithoutSerie = response.series.filter((serie) => serie != title)
+				await AsyncStorage.removeItem('series')
+				await AsyncStorage.setItem('series', JSON.stringify({ series: arrayWithoutSerie }))
+			}
+			ToastAndroid.show('Removida com sucesso', ToastAndroid.SHORT)
+			props.refresh()
+		}
+	}
+
 	return (
 		<View style={styles.container}>
 			<Text style={styles.cradTitle}>
@@ -65,13 +81,16 @@ export default function Card(props) {
 					<Ionicons name="md-add" size={16}  color="#FFF" />
 				</TouchableOpacity>
 			</View>
+			<TouchableOpacity style={styles.removeSerieBtn} onPress={removeSerie}>
+				<Ionicons name="md-trash" size={25} color="#FFF" />
+			</TouchableOpacity>
 		</View>
 	)
 }
 
 const styles = StyleSheet.create({
 	container: {
-		paddingVertical: 30,
+		paddingTop: 30,
 		width: 375,
 		margin: 25,
 		justifyContent: 'center',
@@ -113,5 +132,12 @@ const styles = StyleSheet.create({
 		alignContent: 'center',
 		textAlign: 'center',
 		fontSize: 18,
+	},
+	removeSerieBtn: {
+		backgroundColor: 'rgba(211, 71, 78, 1)',
+		padding: 20,
+		borderBottomRightRadius: 5,
+		borderBottomLeftRadius: 5,
+		alignItems: 'center',
 	}
 })
